@@ -23,7 +23,13 @@ from homeassistant.const import (
     CONF_UNIQUE_ID,
 )
 from homeassistant.core import HomeAssistant, callback
-from homeassistant.helpers.selector import SelectSelector, SelectSelectorConfig
+from homeassistant.helpers.selector import (
+    NumberSelector,
+    NumberSelectorConfig,
+    NumberSelectorMode,
+    SelectSelector,
+    SelectSelectorConfig,
+)
 
 from .const import (
     CONF_BOILER_EFFICIENCY,
@@ -84,13 +90,19 @@ def data_schema(defaults: dict):
             vol.Required(CONF_HOST, default=conf_host): str,
             vol.Required(CONF_PORT, default=conf_port): int,
             vol.Required(CONF_TIMEOUT, default=conf_timeout): int,
-            vol.Optional(CONF_BOILER_EFFICIENCY, default=conf_boiler_efficiency): float,
+            vol.Optional(CONF_BOILER_EFFICIENCY, default=conf_boiler_efficiency): NumberSelector(
+                NumberSelectorConfig(min=0, max=100, step=0.1, mode=NumberSelectorMode.BOX)
+            ),
             vol.Optional(
                 CONF_BOILER_NOMINAL_POWER, default=conf_boiler_nominal_power
-            ): float,
+            ): NumberSelector(
+                NumberSelectorConfig(min=0, max=1000, step=0.1, mode=NumberSelectorMode.BOX)
+            ),
             vol.Optional(
                 CONF_PELLET_NOMINAL_ENERGY, default=conf_pellet_nominal_energy
-            ): float,
+            ): NumberSelector(
+                NumberSelectorConfig(min=0, max=10, step=0.01, mode=NumberSelectorMode.BOX)
+            ),
             # vol.Optional(OPT_LAST_BOILER_RUN_TIME, default=last_boiler_run_time): float,
             # vol.Optional(OPT_LAST_ENERGY_OUTPUT, default=last_energy_output): float,
             # vol.Optional(

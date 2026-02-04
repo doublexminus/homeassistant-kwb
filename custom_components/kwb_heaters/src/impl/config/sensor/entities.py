@@ -61,28 +61,28 @@ def setup_entities(
             # TODO signal_key is a key, not a name. Translate it
             sensor_name = f"{model} {unique_device_id} {signal_key}"
 
-            if signal_definition[0] != "b":
-                unit = signal_definition[4]
-                state_class = signal_definition[6] if signal_definition[6] else SensorStateClass.MEASUREMENT
-                device_class = signal_definition[7]
+            # Create all sensors as regular sensors to show raw values (0/1) instead of "In Betrieb"/"Außer Betrieb"
+            unit = signal_definition[4] if signal_definition[4] else None
+            state_class = signal_definition[6] if signal_definition[6] else SensorStateClass.MEASUREMENT
+            device_class = signal_definition[7] if signal_definition[7] else None
 
-                sensor = CoordinatedSensor(
-                    coordinator=coordinator,
-                    device_info=device_info,
-                    description=SensorDescription(
-                        key=sensor_key,
-                        translation_key=sensor_key,
-                        name=sensor_name,
-                        native_unit_of_measurement=unit,
-                        device_class=device_class,
-                        state_class=state_class,
-                    ),
-                )
+            sensor = CoordinatedSensor(
+                coordinator=coordinator,
+                device_info=device_info,
+                description=SensorDescription(
+                    key=sensor_key,
+                    translation_key=sensor_key,
+                    name=sensor_name,
+                    native_unit_of_measurement=unit,
+                    device_class=device_class,
+                    state_class=state_class,
+                ),
+            )
 
-                if sensor_key == "boiler_output":
-                    boiler_output_sensor = sensor
+            if sensor_key == "boiler_output":
+                boiler_output_sensor = sensor
 
-                entities.append(sensor)
+            entities.append(sensor)
 
     # f_get_native_value: GetNativeValueType = (
     #     lambda sensor: sensor.coordinator.latest_scrape[sensor.entity_description.key],

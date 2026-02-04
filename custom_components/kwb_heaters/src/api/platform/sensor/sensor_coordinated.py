@@ -48,7 +48,14 @@ class CoordinatedSensor(CoordinatorEntity, Sensor):
         You could also set self._attr_native_value in self._handle_coordinator_update()
         instead of implementing this method.
         """
-        return self.coordinator.data.latest_scrape[self.entity_description.key]
+        if not self.coordinator.data or not hasattr(self.coordinator.data, 'latest_scrape'):
+            return None
+        
+        latest_scrape = self.coordinator.data.latest_scrape
+        if not latest_scrape or self.entity_description.key not in latest_scrape:
+            return None
+            
+        return latest_scrape[self.entity_description.key]
 
     @callback
     def _handle_coordinator_update(self) -> None:
@@ -60,6 +67,16 @@ class CoordinatedSensor(CoordinatorEntity, Sensor):
         If super()._handle_coordinator_update() is not called, then the
         state will not be saved to HomeAssistant.
         """
+        # Check if we have valid data
+        if (self.coordinator.data and 
+            hasattr(self.coordinator.data, 'latest_scrape') and 
+            self.coordinator.data.latest_scrape and 
+            self.entity_description.key in self.coordinator.data.latest_scrape):
+            self._attr_available = True
+        else:
+            self._attr_available = False
+            logger.debug("Sensor %s unavailable - no data for key %s", 
+                        self.entity_description.key, self.entity_description.key)
 
         super()._handle_coordinator_update()
 

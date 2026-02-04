@@ -63,7 +63,7 @@ def setup_entities(
 
             if signal_definition[0] != "b":
                 unit = signal_definition[4]
-                state_class = signal_definition[6]
+                state_class = signal_definition[6] if signal_definition[6] else SensorStateClass.MEASUREMENT
                 device_class = signal_definition[7]
 
                 sensor = CoordinatedSensor(
@@ -120,7 +120,7 @@ def setup_entities(
                 name=f"{model} {unique_device_id} Boiler Nominal Power",
                 native_unit_of_measurement=UnitOfPower.KILO_WATT,
                 device_class=SensorDeviceClass.POWER,
-                state_class=state_class,
+                state_class=SensorStateClass.MEASUREMENT,
             ),
         )
     )
@@ -134,7 +134,7 @@ def setup_entities(
                 name=f"{model} {unique_device_id} Boiler Power",
                 native_unit_of_measurement=UnitOfPower.KILO_WATT,
                 device_class=SensorDeviceClass.POWER,
-                state_class=state_class,
+                state_class=SensorStateClass.MEASUREMENT,
             ),
         )
     )
@@ -148,7 +148,7 @@ def setup_entities(
                 name=f"{model} {unique_device_id} Boiler Run Time",
                 native_unit_of_measurement=UnitOfTime.SECONDS,
                 device_class=SensorDeviceClass.DURATION,
-                state_class=state_class,
+                state_class=SensorStateClass.TOTAL_INCREASING,
             ),
         )
     )
@@ -161,8 +161,8 @@ def setup_entities(
                 translation_key="last_timestamp",
                 name=f"{model} {unique_device_id} Last Timestamp",
                 native_unit_of_measurement=UnitOfTime.MILLISECONDS,
-                device_class=SensorDeviceClass.DURATION,
-                state_class=state_class,
+                device_class=SensorDeviceClass.TIMESTAMP,
+                state_class=SensorStateClass.MEASUREMENT,
             ),
         )
     )
@@ -201,7 +201,7 @@ def setup_entities(
                 name=f"{model} {unique_device_id} Pellet Consumption",
                 native_unit_of_measurement="kg",
                 device_class=SensorDeviceClass.WEIGHT,
-                state_class=state_class,
+                state_class=SensorStateClass.TOTAL_INCREASING,
             ),
         )
     )

@@ -64,26 +64,27 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> T
         CONF_BOILER_NOMINAL_POWER: config_entry.data.get(CONF_BOILER_NOMINAL_POWER),
         CONF_PELLET_NOMINAL_ENERGY: config_entry.data.get(CONF_PELLET_NOMINAL_ENERGY),
     }
-    # HACK remove hardcoded sensor names
-    # TODO we need to somehow recover the last boiler_run_time, energy_output and pellet_consumption sensor values
-    # They should be fed to the KWBHeater constructor (?)
-    # FIXME these sensors need to be prefixed with {model}_{unique_id}_
-    sensor_boiler_run_time = hass.states.get("sensor.boiler_run_time")
-    sensor_energy_output = hass.states.get("sensor.energy_output")
-    sensor_pellet_consumption = hass.states.get("sensor.pellet_consumption")
-    sensor_last_timestamp = hass.states.get("sensor.last_timestamp")
+    # Recover sensor states using proper entity IDs
+    model = config_entry.data.get(CONF_MODEL)
+    sensor_prefix = f"sensor.kwb_{unique_device_id}"
+    
+    sensor_boiler_run_time = hass.states.get(f"{sensor_prefix}_boiler_run_time")
+    sensor_energy_output = hass.states.get(f"{sensor_prefix}_boiler_energy_output")
+    sensor_pellet_consumption = hass.states.get(f"{sensor_prefix}_pellet_consumption")
+    sensor_last_timestamp = hass.states.get(f"{sensor_prefix}_last_timestamp")
+    
     last_boiler_run_time = (
-        float(sensor_boiler_run_time.state) if sensor_boiler_run_time else 0.0
+        float(sensor_boiler_run_time.state) if sensor_boiler_run_time and sensor_boiler_run_time.state not in ['unknown', 'unavailable'] else 0.0
     )
     last_energy_output = (
-        float(sensor_energy_output.state) if sensor_energy_output else 0.0
+        float(sensor_energy_output.state) if sensor_energy_output and sensor_energy_output.state not in ['unknown', 'unavailable'] else 0.0
     )
     last_pellet_consumption = (
-        float(sensor_pellet_consumption.state) if sensor_pellet_consumption else 0.0
+        float(sensor_pellet_consumption.state) if sensor_pellet_consumption and sensor_pellet_consumption.state not in ['unknown', 'unavailable'] else 0.0
     )
     last_timestamp = (
         float(sensor_last_timestamp.state)
-        if sensor_last_timestamp
+        if sensor_last_timestamp and sensor_last_timestamp.state not in ['unknown', 'unavailable']
         else time.time_ns() / 1000000
     )
     config_heater.update(

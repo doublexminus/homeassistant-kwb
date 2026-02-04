@@ -14,12 +14,13 @@ def data_updater(appliance: Appliance):
         try:
             is_success = appliance.scrape()
             logger.debug("data_updater is_success=%s", is_success)
+            logger.debug("data_updater latest_scrape keys: %s", list(appliance.latest_scrape.keys()) if appliance.latest_scrape else "None")
         except Exception as e:
             logger.error("Failed scraping KWB heater", exc_info=e)
             raise UpdateFailed("Failed scraping KWB heater")
 
         if not is_success or appliance.latest_scrape == {}:
-            logger.error("Failed scraping KWB heater")
+            logger.error("Failed scraping KWB heater - no data returned")
             raise UpdateFailed("Failed scraping KWB heater")
 
         return appliance

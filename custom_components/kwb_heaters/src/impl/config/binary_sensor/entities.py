@@ -1,7 +1,6 @@
 from collections.abc import Iterable
 import logging
 
-from pykwb.kwb import load_signal_maps
 from homeassistant.components.binary_sensor import BinarySensorDeviceClass
 
 from homeassistant.config_entries import ConfigEntry
@@ -37,36 +36,11 @@ def setup_entities(
 
     entities = []
 
-    # TODO refactor out this chunk. Same in sensors.entities.py
-    for signal_map in load_signal_maps(source=10):
-        if not signal_map:
-            continue
-        for signal_key, signal_definition in signal_map.items():
-            sensor_key = (
-                signal_definition[5]
-                if signal_definition[5] and signal_definition[5] != ""
-                else signal_key.lower().replace(" ", "_")
-            )
-            # TODO signal_key is a key, not a name. Translate it
-            sensor_name = f"{model} {unique_device_id} {signal_key}"
-
-            if signal_definition[0] == "b":
-                # TODO should be from BinarySensorDeviceClass.
-                # Should be "running" or "problem"?
-                # device_class = signal_definition[5]
-
-                entities.append(
-                    CoordinatedBinarySensor(
-                        coordinator=coordinator,
-                        device_info=device_info,
-                        entity_description=BinarySensorDescription(
-                            key=sensor_key,
-                            translation_key=sensor_key,
-                            name=sensor_name,
-                            device_class=BinarySensorDeviceClass.RUNNING,
-                        ),
-                    )
-                )
+    # NOTE: Boolean ("b") signals are intentionally NOT registered as binary
+    # sensors here. They are created as regular sensors in
+    # sensor/entities.py so their raw values (0/1) are shown instead of
+    # "In Betrieb"/"Außer Betrieb". Registering them here as well would create
+    # duplicate entities for the same signal.
 
     entities.append(
         CoordinatedBinarySensor(

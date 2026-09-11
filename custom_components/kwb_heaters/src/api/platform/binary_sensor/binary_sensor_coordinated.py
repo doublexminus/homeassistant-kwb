@@ -34,7 +34,10 @@ class CoordinatedBinarySensor(CoordinatorEntity, BinarySensor):
 
     @property
     def is_on(self) -> bool:
-        return bool(self.coordinator.data.latest_scrape[self.entity_description.key])
+        raw = bool(self.coordinator.data.latest_scrape[self.entity_description.key])
+        if self.entity_description.inverted:
+            return not raw
+        return raw
 
     # @callback
     # def _handle_coordinator_update(self) -> None:

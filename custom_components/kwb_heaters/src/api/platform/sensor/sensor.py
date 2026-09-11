@@ -16,6 +16,7 @@ DEFAULT_RESTORE_SENSOR = True
 class Sensor(RestoreSensor):
     """Representation of a KWB Easyfire sensor."""
 
+    _attr_has_entity_name = True
     _recovered = False
 
     def __init__(self, entity_description: SensorDescription, device_info: DeviceInfo):

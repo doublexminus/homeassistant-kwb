@@ -4,3 +4,5 @@ from homeassistant.helpers.restore_state import RestoreEntity
 
 class BinarySensor(BinarySensorEntity):
     """Custom binary sensor entity."""
+
+    _attr_has_entity_name = True

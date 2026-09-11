@@ -54,8 +54,8 @@ def data_schema(defaults: dict):
     conf_sender = defaults.get(CONF_SENDER, "comfort_3")
     conf_timeout = defaults.get(CONF_TIMEOUT, 2)
     conf_boiler_efficiency = defaults.get(CONF_BOILER_EFFICIENCY, 90.0)
-    conf_boiler_nominal_power = defaults.get(CONF_BOILER_NOMINAL_POWER)
-    conf_pellet_nominal_energy = defaults.get(CONF_PELLET_NOMINAL_ENERGY)
+    conf_boiler_nominal_power = defaults.get(CONF_BOILER_NOMINAL_POWER, 15)
+    conf_pellet_nominal_energy = defaults.get(CONF_PELLET_NOMINAL_ENERGY, 4.8)
     # Load up existing sensor values
     # sensor_boiler_run_time = defaults.get("boiler_run_time")
     # sensor_energy_output = defaults.get("boiler_energy")

@@ -1,8 +1,8 @@
 {
   "domain": "kwb_heaters",
-  "name": "KWB Heaters",
+  "name": "KWB Heaters (2026)",
   "version": "0.0.1",
-  "codeowners": ["alangibson"],
+  "codeowners": ["doublexminus"],
   "documentation": "",
   "iot_class": "local_polling",
   "loggers": ["pykwb"],
@@ -11,3 +11,4 @@
   ],
   "config_flow": true
 }
+  

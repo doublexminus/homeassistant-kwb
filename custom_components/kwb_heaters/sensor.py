@@ -46,10 +46,11 @@ async def async_setup_entry(
     #   hass.data[DOMAIN][...]['f_create_sensors'] = ... ?
 
     # Register our sensor entities.
-    # create_sensors() can return any kind of Iterable.
-    async_add_entities(
-        setup_entities(
+    # setup_entities() calls load_signal_maps() which does blocking file I/O,
+    # so we run it in the executor to avoid blocking the event loop.
+    entities = await hass.async_add_executor_job(
+        lambda: setup_entities(
             device_info=device_info, coordinator=coordinator, config_entry=config_entry
-        ),
-        update_before_add=True,
+        )
     )
+    async_add_entities(entities, update_before_add=True)

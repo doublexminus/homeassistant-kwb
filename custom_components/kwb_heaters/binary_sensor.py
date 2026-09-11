@@ -39,8 +39,10 @@ async def async_setup_entry(
     }
 
     async_add_entities(
-        setup_entities(
-            coordinator=coordinator, config_entry=config_entry, device_info=device_info
+        await hass.async_add_executor_job(
+            lambda: setup_entities(
+                coordinator=coordinator, config_entry=config_entry, device_info=device_info
+            )
         ),
         update_before_add=True,
     )

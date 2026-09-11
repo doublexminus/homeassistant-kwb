@@ -1,6 +1,7 @@
 """The KWB integration"""
 
 from datetime import timedelta
+import importlib
 import logging
 import time
 
@@ -162,6 +163,15 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> T
     #     # For platform 'sensor', file sensor.py must exist
     #     hass.config_entries.async_forward_entry_setups(config_entry, PLATFORMS)
     # )
+
+    # Pre-import platform modules in the executor to avoid blocking the event
+    # loop when HA calls importlib.import_module() during platform setup.
+    await hass.async_add_executor_job(
+        lambda: [
+            importlib.import_module(f"custom_components.kwb_heaters.{p.value}")
+            for p in PLATFORMS
+        ]
+    )
 
     await hass.config_entries.async_forward_entry_setups(config_entry, PLATFORMS)
 

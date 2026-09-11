@@ -27,6 +27,25 @@ from ....impl.platform.sensor.pellet_consumption_sensor import (
 
 logger = logging.getLogger(__name__)
 
+# pykwb CSV delivers unit/device_class strings that don't match HA's expectations.
+# This map normalises them before creating sensor descriptions.
+# (csv_unit, csv_device_class) -> (ha_unit, ha_device_class)
+_UNIT_DEVICE_CLASS_MAP: dict[tuple[str, str], tuple[str | None, str | None]] = {
+    # "rpm" is not a valid unit for SensorDeviceClass.SPEED (linear speed).
+    # Drop device_class so HA treats it as a plain numeric sensor.
+    ("rpm", "speed"): ("rpm", None),
+    # pykwb uses "sec" but HA requires "s" (UnitOfTime.SECONDS).
+    ("sec", "duration"): (UnitOfTime.SECONDS, "duration"),
+}
+
+
+def _normalise_unit_and_device_class(
+    unit: str | None, device_class: str | None
+) -> tuple[str | None, str | None]:
+    """Return (unit, device_class) corrected for HA compatibility."""
+    key = (str(unit), str(device_class))
+    return _UNIT_DEVICE_CLASS_MAP.get(key, (unit, device_class))
+
 
 class TimestampSensor(CoordinatedSensor):
     """CoordinatedSensor that converts a Unix-millisecond integer to a datetime."""
@@ -80,6 +99,8 @@ def setup_entities(
                 unit = signal_definition[4]
                 state_class = signal_definition[6] if signal_definition[6] else SensorStateClass.MEASUREMENT
                 device_class = signal_definition[7]
+
+                unit, device_class = _normalise_unit_and_device_class(unit, device_class)
 
                 sensor = CoordinatedSensor(
                     coordinator=coordinator,

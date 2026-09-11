@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from collections.abc import Iterable
+from datetime import datetime, timezone
 import logging
 
 from pykwb.kwb import load_signal_maps
@@ -25,6 +26,20 @@ from ....impl.platform.sensor.pellet_consumption_sensor import (
 )
 
 logger = logging.getLogger(__name__)
+
+
+class TimestampSensor(CoordinatedSensor):
+    """CoordinatedSensor that converts a Unix-millisecond integer to a datetime."""
+
+    @property
+    def native_value(self) -> datetime | None:
+        raw = super().native_value
+        if raw is None:
+            return None
+        try:
+            return datetime.fromtimestamp(int(raw) / 1000, tz=timezone.utc)
+        except (ValueError, TypeError, OSError):
+            return None
 
 
 def setup_entities(
@@ -153,16 +168,14 @@ def setup_entities(
         )
     )
     entities.append(
-        CoordinatedSensor(
+        TimestampSensor(
             coordinator=coordinator,
             device_info=device_info,
             description=SensorDescription(
                 key="last_timestamp",
                 translation_key="last_timestamp",
                 name=f"{model} {unique_device_id} Last Timestamp",
-                native_unit_of_measurement=UnitOfTime.MILLISECONDS,
-                device_class=SensorDeviceClass.DURATION,
-                state_class=SensorStateClass.MEASUREMENT,
+                device_class=SensorDeviceClass.TIMESTAMP,
             ),
         )
     )

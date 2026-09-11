@@ -1,0 +1,154 @@
+{
+  "config": {
+    "abort": {
+      "already_configured": "Heizung ist bereits konfiguriert"
+    },
+    "error": {
+      "cannot_connect": "Verbindung zur Heizung fehlgeschlagen",
+      "unknown": "Unbekannter Fehler."
+    },
+    "step": {
+      "user": {
+        "data": {
+          "unique_id": "Seriennummer",
+          "host": "Hostname oder IP-Adresse",
+          "port": "Port",
+          "timeout": "Nachrichten-Timeout",
+          "connection": "Verbindungstyp",
+          "model": "Heizungsmodell",
+          "sender": "Reglermodell",
+          "protocol": "Kommunikationsprotokoll",
+          "boiler_efficiency": "Kesselwirkungsgrad [%]",
+          "boiler_nominal_power_kW": "Kessel Nennleistung [kW]",
+          "pellet_nominal_energy_kWh_kg": "Pellet Heizwert [kWh/kg]",
+          "last_boiler_run_time": "Letzte Kesselbetriebszeit [Sek]",
+          "last_energy_output": "Letzter Energieertrag [kWh]",
+          "last_pellet_consumption": "Letzter Pelletverbrauch [kg]",
+          "last_timestamp": "Letzter Zeitstempel [msek]"
+        },
+        "data_description": {
+          "unique_id": "Auf dem Typenschild. Nur Buchstaben und Ziffern verwenden",
+          "host": "Hostname oder IP-Adresse des RS485-LAN-Servers",
+          "port": "TCP-Port des RS485-LAN-Servers",
+          "timeout": "Maximale Wartezeit auf Nachrichten",
+          "connection": "Verbindungstyp",
+          "model": "Heizungsmodell",
+          "sender": "Reglermodell",
+          "protocol": "Kommunikationsprotokoll",
+          "boiler_efficiency": "90 verwenden wenn unbekannt",
+          "boiler_nominal_power_kW": "Auf dem Typenschild",
+          "pellet_nominal_energy_kWh_kg": "Beim Pelletlieferanten erfragen",
+          "last_boiler_run_time": "Nur zur Datenwiederherstellung",
+          "last_energy_output": "Nur zur Datenwiederherstellung",
+          "last_pellet_consumption": "Nur zur Datenwiederherstellung",
+          "last_timestamp": "Nur zur Datenwiederherstellung"
+        }
+      }
+    }
+  },
+  "options": {
+    "error": {
+      "...": "..."
+    },
+    "step": {
+      "init": {
+        "title": "KWB Heizung verwalten",
+        "data": {
+          "unique_id": "Name der Heizung",
+          "host": "Hostname oder IP-Adresse",
+          "port": "Port",
+          "timeout": "Verbindungs-Timeout",
+          "connection": "Verbindungstyp",
+          "model": "Heizungsmodell",
+          "sender": "Reglermodell",
+          "protocol": "Kommunikationsprotokoll",
+          "boiler_efficiency": "Kesselwirkungsgrad [%]",
+          "boiler_nominal_power_kW": "Kessel Nennleistung [kW]",
+          "pellet_nominal_energy_kWh_kg": "Pellet Heizwert [kWh/kg]",
+          "last_boiler_run_time": "Letzte Kesselbetriebszeit [Sek]",
+          "last_energy_output": "Letzter Energieertrag [kWh]",
+          "last_pellet_consumption": "Letzter Pelletverbrauch [kg]",
+          "last_timestamp": "Letzter Zeitstempel [msek]"
+        },
+        "description": "KWB Heizungseinstellungen ändern"
+      }
+    }
+  },
+  "selector": {
+    "model": {
+      "options": {
+        "easyfire_1": "EasyFire",
+        "unknown": "Alle anderen Modelle"
+      }
+    },
+    "sender": {
+      "options": {
+        "comfort_3": "Comfort 3",
+        "unknown": "Alle anderen Modelle"
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "loop_1_out_temp":                  { "name": "Heizkreis 1 Vorlauftemperatur" },
+      "loop_2_out_temp":                  { "name": "Heizkreis 2 Vorlauftemperatur" },
+      "loop_3_out_temp":                  { "name": "Heizkreis 3 Vorlauftemperatur" },
+      "loop_4_out_temp":                  { "name": "Heizkreis 4 Vorlauftemperatur" },
+      "loop_1_remote_adjustment_temp":    { "name": "Heizkreis 1 Fernverstell-Temperatur" },
+      "loop_2_remote_adjustment_temp":    { "name": "Heizkreis 2 Fernverstell-Temperatur" },
+      "heater_temp":                      { "name": "Kesseltemperatur" },
+      "heater_return_temp":               { "name": "Kesselrücklauftemperatur" },
+      "exhaust_temp":                     { "name": "Abgastemperatur" },
+      "outside_temp":                     { "name": "Außentemperatur" },
+      "buffer_1_temp":                    { "name": "Pufferspeicher 1 Temperatur" },
+      "buffer_2_temp":                    { "name": "Pufferspeicher 2 Temperatur" },
+      "tank_0_temp":                      { "name": "Tank Temperatur" },
+      "cpu_temp":                         { "name": "CPU Temperatur" },
+      "photodiode":                       { "name": "Photodiode (Flammensensor)" },
+      "suction_speed":                    { "name": "Saugzuggebläse Drehzahl" },
+      "fan_speed":                        { "name": "Verbrennungsluftgebläse Drehzahl" },
+      "pressure":                         { "name": "Kesseldruck" },
+      "main_drive_cycle_time":            { "name": "Einschubschnecke Taktzeit" },
+      "main_drive_run_time":              { "name": "Einschubschnecke Laufzeit" },
+      "boiler_output":                    { "name": "Kesselleistung" },
+      "buffer_0_pumping":                 { "name": "Pufferpumpe Leistung" },
+      "boiler_nominal_power":             { "name": "Kessel Nennleistung" },
+      "boiler_power":                     { "name": "Kessel Istleistung" },
+      "boiler_run_time":                  { "name": "Kessel Betriebsstunden" },
+      "boiler_energy_output":             { "name": "Kessel Energieertrag" },
+      "pellet_consumption":               { "name": "Pelletverbrauch" },
+      "last_timestamp":                   { "name": "Letzter Datenpunkt" }
+    },
+    "binary_sensor": {
+      "heater_power_on":                  { "name": "Kessel eingeschaltet" },
+      "heater_active":                    { "name": "Kessel aktiv (heizt)" },
+      "heater_main_contact_on":           { "name": "Kessel Hauptkontakt" },
+      "ignition_state":                   { "name": "Zündung aktiv" },
+      "ignition_on":                      { "name": "Zünder eingeschaltet" },
+      "igniter_alarm":                    { "name": "Zünder Alarm" },
+      "main_drive_on":                    { "name": "Einschubschnecke läuft" },
+      "loop_1_pump_on":                   { "name": "Heizkreispumpe 1 läuft" },
+      "loop_1_mixer_open":                { "name": "Heizkreismischer 1 offen" },
+      "loop_1_mixer_closed":              { "name": "Heizkreismischer 1 geschlossen" },
+      "tank_0_pump_on":                   { "name": "Tankpumpe läuft" },
+      "buffer_pump_on":                   { "name": "Pufferpumpe läuft" },
+      "rla_valve_state":                  { "name": "RLA Ventil" },
+      "ash_can_ok":                       { "name": "Aschebehälter OK" },
+      "ash_grate_full":                   { "name": "Ascherost voll" },
+      "ash_grate_revolving":              { "name": "Ascherost dreht" },
+      "ash_clearing_on":                  { "name": "Ascheaustragung läuft" },
+      "ash_clearing_fan_on":              { "name": "Ascheaustragung Gebläse" },
+      "ash_clearing_alarm":               { "name": "Ascheaustragung Alarm" },
+      "no_interference_state":            { "name": "Störungsfreiheit" },
+      "door_contact":                     { "name": "Türkontakt" },
+      "safety_thermostat":                { "name": "Sicherheitsthermostat" },
+      "rfk_button":                       { "name": "RFK Taste" },
+      "sunction":                         { "name": "Saugzug aktiv" },
+      "endschalter_bs_klappe":            { "name": "Endschalter BS-Klappe" },
+      "tüb_ignition":                     { "name": "TÜB Zündung" },
+      "extern_1":                         { "name": "Externer Eingang 1" },
+      "extern_2":                         { "name": "Externer Eingang 2" },
+      "boiler_on":                        { "name": "Kessel Ein" }
+    }
+  }
+}

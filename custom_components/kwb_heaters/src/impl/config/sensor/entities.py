@@ -72,9 +72,6 @@ def setup_entities(
     block the HomeAssistant event loop.
     """
 
-    unique_device_id = list(device_info.get("identifiers"))[0][1]
-    model = device_info.get("model")
-
     # We will need these for later use at the end
     boiler_nominal_power: float = config_entry.data.get(CONF_BOILER_NOMINAL_POWER)
     boiler_efficiency: float = config_entry.data.get(CONF_BOILER_EFFICIENCY)
@@ -92,8 +89,6 @@ def setup_entities(
                 if signal_definition[5] and signal_definition[5] != ""
                 else signal_key.lower().replace(" ", "_")
             )
-            # TODO signal_key is a key, not a name. Translate it
-            sensor_name = f"{model} {unique_device_id} {signal_key}"
 
             if signal_definition[0] != "b":
                 unit = signal_definition[4]
@@ -108,7 +103,6 @@ def setup_entities(
                     description=SensorDescription(
                         key=sensor_key,
                         translation_key=sensor_key,
-                        name=sensor_name,
                         native_unit_of_measurement=unit,
                         device_class=device_class,
                         state_class=state_class,
@@ -153,7 +147,6 @@ def setup_entities(
             description=SensorDescription(
                 key="boiler_nominal_power",
                 translation_key="boiler_nominal_power",
-                name=f"{model} {unique_device_id} Boiler Nominal Power",
                 native_unit_of_measurement=UnitOfPower.KILO_WATT,
                 device_class=SensorDeviceClass.POWER,
                 state_class=SensorStateClass.MEASUREMENT,
@@ -167,7 +160,6 @@ def setup_entities(
             description=SensorDescription(
                 key="boiler_power",
                 translation_key="boiler_power",
-                name=f"{model} {unique_device_id} Boiler Power",
                 native_unit_of_measurement=UnitOfPower.KILO_WATT,
                 device_class=SensorDeviceClass.POWER,
                 state_class=SensorStateClass.MEASUREMENT,
@@ -181,7 +173,6 @@ def setup_entities(
             description=SensorDescription(
                 key="boiler_run_time",
                 translation_key="boiler_run_time",
-                name=f"{model} {unique_device_id} Boiler Run Time",
                 native_unit_of_measurement=UnitOfTime.SECONDS,
                 device_class=SensorDeviceClass.DURATION,
                 state_class=SensorStateClass.TOTAL_INCREASING,
@@ -195,7 +186,6 @@ def setup_entities(
             description=SensorDescription(
                 key="last_timestamp",
                 translation_key="last_timestamp",
-                name=f"{model} {unique_device_id} Last Timestamp",
                 device_class=SensorDeviceClass.TIMESTAMP,
             ),
         )
@@ -216,7 +206,6 @@ def setup_entities(
         entity_description=SensorDescription(
             key="boiler_energy_output",
             translation_key="boiler_energy_output",
-            name=f"{model} {unique_device_id} Boiler Energy Output",
             native_unit_of_measurement=UnitOfEnergy.KILO_WATT_HOUR,
             device_class=SensorDeviceClass.ENERGY,
             state_class=SensorStateClass.TOTAL,
@@ -232,7 +221,6 @@ def setup_entities(
             entity_description=SensorDescription(
                 key="pellet_consumption",
                 translation_key="pellet_consumption",
-                name=f"{model} {unique_device_id} Pellet Consumption",
                 native_unit_of_measurement="kg",
                 device_class=SensorDeviceClass.WEIGHT,
                 state_class=SensorStateClass.TOTAL_INCREASING,

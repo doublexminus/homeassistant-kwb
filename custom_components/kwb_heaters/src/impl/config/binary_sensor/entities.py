@@ -5,7 +5,6 @@ from pykwb.kwb import load_signal_maps
 from homeassistant.components.binary_sensor import BinarySensorDeviceClass
 
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import EntityCategory
 from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity import Entity
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
@@ -31,10 +30,6 @@ def setup_entities(
     block the HomeAssistant event loop.
     """
 
-    # TODO refactor out this chunk. Same in sensors.entities.py
-    unique_device_id = list(device_info.get("identifiers"))[0][1]
-    model = device_info.get("model")
-
     entities = []
 
     # TODO refactor out this chunk. Same in sensors.entities.py
@@ -47,8 +42,6 @@ def setup_entities(
                 if signal_definition[5] and signal_definition[5] != ""
                 else signal_key.lower().replace(" ", "_")
             )
-            # TODO signal_key is a key, not a name. Translate it
-            sensor_name = f"{model} {unique_device_id} {signal_key}"
 
             if signal_definition[0] == "b":
                 # TODO should be from BinarySensorDeviceClass.
@@ -62,7 +55,6 @@ def setup_entities(
                         entity_description=BinarySensorDescription(
                             key=sensor_key,
                             translation_key=sensor_key,
-                            name=sensor_name,
                             device_class=BinarySensorDeviceClass.RUNNING,
                         ),
                     )
@@ -75,7 +67,6 @@ def setup_entities(
             entity_description=BinarySensorDescription(
                 key="boiler_on",
                 translation_key="boiler_on",
-                name=f"{model} {unique_device_id} Boiler On",
                 device_class=BinarySensorDeviceClass.RUNNING,
             ),
         )

@@ -18,6 +18,28 @@ from ....api.platform.binary_sensor.binary_sensor_description import (
 
 logger = logging.getLogger(__name__)
 
+# Maps sensor_key -> BinarySensorDeviceClass for keys that need a specific class.
+# All other binary sensors fall back to RUNNING.
+_DEVICE_CLASS_MAP: dict[str, BinarySensorDeviceClass] = {
+    # Power on/off
+    "heater_active":          BinarySensorDeviceClass.POWER,
+    "heater_power_on":        BinarySensorDeviceClass.POWER,
+    "heater_main_contact_on": BinarySensorDeviceClass.POWER,
+    "ignition_state":         BinarySensorDeviceClass.POWER,
+    "ignition_on":            BinarySensorDeviceClass.POWER,
+    "boiler_on":              BinarySensorDeviceClass.POWER,
+    # Alarms / problems
+    "igniter_alarm":          BinarySensorDeviceClass.PROBLEM,
+    "ash_clearing_alarm":     BinarySensorDeviceClass.PROBLEM,
+    "ash_grate_full":         BinarySensorDeviceClass.PROBLEM,
+    "no_interference_state":  BinarySensorDeviceClass.PROBLEM,
+    # Safety
+    "safety_thermostat":      BinarySensorDeviceClass.SAFETY,
+    # Open / closed
+    "door_contact":           BinarySensorDeviceClass.OPENING,
+    "endschalter_bs_klappe":  BinarySensorDeviceClass.OPENING,
+}
+
 
 def setup_entities(
     device_info: DeviceInfo,
@@ -44,10 +66,9 @@ def setup_entities(
             )
 
             if signal_definition[0] == "b":
-                # TODO should be from BinarySensorDeviceClass.
-                # Should be "running" or "problem"?
-                # device_class = signal_definition[5]
-
+                device_class = _DEVICE_CLASS_MAP.get(
+                    sensor_key, BinarySensorDeviceClass.RUNNING
+                )
                 entities.append(
                     CoordinatedBinarySensor(
                         coordinator=coordinator,
@@ -55,7 +76,7 @@ def setup_entities(
                         entity_description=BinarySensorDescription(
                             key=sensor_key,
                             translation_key=sensor_key,
-                            device_class=BinarySensorDeviceClass.RUNNING,
+                            device_class=device_class,
                         ),
                     )
                 )
@@ -67,7 +88,7 @@ def setup_entities(
             entity_description=BinarySensorDescription(
                 key="boiler_on",
                 translation_key="boiler_on",
-                device_class=BinarySensorDeviceClass.RUNNING,
+                device_class=BinarySensorDeviceClass.POWER,
             ),
         )
     )

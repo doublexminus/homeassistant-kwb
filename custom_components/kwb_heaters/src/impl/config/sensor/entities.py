@@ -160,8 +160,8 @@ def setup_entities(
                 key="last_timestamp",
                 translation_key="last_timestamp",
                 name=f"{model} {unique_device_id} Last Timestamp",
-                #native_unit_of_measurement=UnitOfTime.MILLISECONDS,
-                device_class=SensorDeviceClass.TIMESTAMP,
+                native_unit_of_measurement=UnitOfTime.MILLISECONDS,
+                device_class=SensorDeviceClass.DURATION,
                 state_class=SensorStateClass.MEASUREMENT,
             ),
         )

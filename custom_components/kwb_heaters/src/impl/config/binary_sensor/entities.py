@@ -45,6 +45,9 @@ _DEVICE_CLASS_MAP: dict[str, BinarySensorDeviceClass] = {
 _INVERTED_KEYS: frozenset[str] = frozenset({
     "no_interference_state",  # True = no interference = OK
 })
+
+
+def setup_entities(
     device_info: DeviceInfo,
     coordinator: DataUpdateCoordinator,
     config_entry: ConfigEntry,

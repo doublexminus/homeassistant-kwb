@@ -186,7 +186,7 @@ class KWBConfigFlow(ConfigFlow, domain=DOMAIN):
 class KWBOptionsFlow(OptionsFlow):
     def __init__(self, config_entry: ConfigEntry) -> None:
         """Initialize options flow."""
-        self.config_entry = config_entry
+        self._config_entry = config_entry
 
     async def async_step_init(
         self, user_input: dict[str, Any] | None = None
@@ -290,7 +290,7 @@ class KWBOptionsFlow(OptionsFlow):
         # sensor_energy_output = self.hass.states.get("sensor.energy_output")
         # sensor_pellet_consumption = self.hass.states.get("sensor.pellet_consumption")
         # sensor_last_timestamp = self.hass.states.get("sensor.last_timestamp")
-        defaults = {**self.config_entry.data, **self.config_entry.options}
+        defaults = {**self._config_entry.data, **self._config_entry.options}
         schema = data_schema(defaults)
 
         if user_input is not None:

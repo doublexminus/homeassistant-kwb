@@ -109,8 +109,7 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> T
 
     # Configure DataUpdateCoordinator
     async def data_update_method():
-        # return await hass.async_add_executor_job(data_updater(heater_or_exception))
-        return data_updater(heater_or_exception)()
+        return await hass.async_add_executor_job(data_updater(heater_or_exception))
 
     # TODO move this to __init__.py
     # Create a data update coordinator

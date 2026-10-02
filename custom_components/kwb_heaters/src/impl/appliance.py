@@ -1,6 +1,7 @@
 """Glue code that allows HomeAssistant to get data from pykwb."""
 
 import logging
+import socket
 
 from pykwb.kwb import KWBMessageStream, TCPByteReader, load_signal_maps
 
@@ -56,26 +57,29 @@ class Appliance:
         self.latest_scrape = {}
 
     def scrape(self):
-        self.message_stream.open()
+        try:
+            self.message_stream.open()
+        except (OSError, socket.error) as e:
+            host = getattr(self.message_stream.reader, "ip", "?")
+            logger.warning("KWB heater TCP connection failed (host=%s): %s", host, e)
+            raise
 
-        # TODO use read_data(), not read_messages()
-        # message_generator = self.message_stream.read_messages(
-        #     self.message_ids, self.read_timeout
-        # )
-        # for message in message_generator:
-        #     data = message.decode()
-        #     # Put data in latest_scrape
-        #     for sensor_name, sensor_data in data.items():
-        #         # Prepend unique id to sensor name
-        #         sensor_value = sensor_data[0]
-        #         sensor_definition = sensor_data[1]
-        #         self.latest_scrape[sensor_name] = sensor_value
+        try:
+            datas = list(self.message_stream.read_data(self.message_ids, self.read_timeout))
+        finally:
+            self.message_stream.close()
 
-        data = self.message_stream.read_data_once(self.message_ids, self.read_timeout)
-        self.latest_scrape.update(data)
+        if not datas:
+            logger.warning(
+                "KWB heater returned no data within timeout=%ss for message_ids=%s. "
+                "The heater may be offline or the timeout too short.",
+                self.read_timeout,
+                self.message_ids,
+            )
+            return False
 
-        self.message_stream.close()
-
+        self.latest_scrape.update(datas[-1])
+        logger.debug("Scraped %d data keys from KWB heater", len(datas[-1]))
         return True
 
 
